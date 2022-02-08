@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # encoding: utf-8
-#===============================================================================
+# ===============================================================================
 #
 #         FILE:  sso.py
 #
@@ -17,7 +17,7 @@
 #      VERSION:  3.0
 #      CREATED:
 #     REVISION:  ---
-#===============================================================================
+# ===============================================================================
 
 
 import re
@@ -34,7 +34,7 @@ try:
 except ImportError:
     pass
 
-locale.setlocale(locale.LC_ALL, 'zh_CN.UTF-8')
+locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
 code = locale.getpreferredencoding()
 
 ssh_config = os.environ['HOME'] + '/.ssh/config'
@@ -43,14 +43,14 @@ re_search = {
     'user': re.compile(r'^\s+user\s*(.*)', re.IGNORECASE),
     'hostname': re.compile(r'^\s+hostname\s*(.*)', re.IGNORECASE),
     'port': re.compile(r'^\s+port\s*(.*)', re.IGNORECASE),
-    'group': re.compile(r'^#(?:c\s+)?group\s*(.*)', re.IGNORECASE),
-    'tags': re.compile(r'^#tags\s*(.*)', re.IGNORECASE)
+    'group': re.compile(r'^#\s*group\s*(.*)', re.IGNORECASE),
+    'tags': re.compile(r'^#\s*tags\s*(.*)', re.IGNORECASE)
 }
 server_list = []
 argv_sort = 'hg:t:'
 argv_long = ['help', 'group=', 'tags=']
 running_options = {}
-VERSION = '3.2'
+VERSION = '3.3'
 
 
 def get_opts():
@@ -165,7 +165,7 @@ def search_group_tags(group,tags,sort_id):
 # group 有值，tags有值
 def show_list_console(kuandu=108):
     print("SSH Manager (Version %s)" % VERSION)
-    print('Group: %s \nTags: %s' % (running_options['group'],running_options['tags']))
+    print('Group: %s \nTags: %s' % (running_options['group'], running_options['tags']))
     sort = 0
     show_id = []
     while sort < len(server_list):
@@ -174,10 +174,10 @@ def show_list_console(kuandu=108):
         if not 'tags' in server_list[sort]:
             server_list[sort]['tags'] = 'UNDEFINED'
         if running_options['group'] == 'ALL':
-            #group = ALL
+            # group = ALL
             show_id.append(sort)
         else:
-            #无tags
+            # 无tags
             if running_options['tags'] == 'NULL':
                 if search_group(running_options['group'],sort):
                     show_id.append(sort)
@@ -196,7 +196,7 @@ def show_list_console(kuandu=108):
         table.align[h] = 'l'
     table.align['Tags'] = 'r'
     for show_id_index,show_id_data in enumerate(show_id):
-        #print "the length of (%s) is %d" %('Hello World',len('Hello World'))
+        # print "the length of (%s) is %d" %('Hello World',len('Hello World'))
         # print("| %-2d | %-30s | %-15s | %-15s | %30s |" % (show_id_index, server_list[show_id_data]['user']+'@'+server_list[show_id_data]['hostname']+':'+server_list[show_id_data]['port'], server_list[show_id_data]['group'], server_list[show_id_data]['tags'],  server_list[show_id_data]['host_tag']))
         table.add_row([
             show_id_index,
@@ -205,8 +205,8 @@ def show_list_console(kuandu=108):
             server_list[show_id_data]['tags'],
             server_list[show_id_data]['host_tag']
             ]) 
-    #print "-" * kuandu
-    #return show_id
+    # print "-" * kuandu
+    # return show_id
     print(table)
     return show_id
 
@@ -221,15 +221,15 @@ def show_list_curses() -> Tuple[str, str, str, str]:
     show_id = []
     get_input = None
     while sort < len(server_list):
-        if not 'group' in server_list[sort]:
+        if 'group' not in server_list[sort]:
             server_list[sort]['group'] = 'UNDEFINED'
-        if not 'tags' in server_list[sort]:
+        if 'tags' not in server_list[sort]:
             server_list[sort]['tags'] = 'UNDEFINED'
         if running_options['group'] == 'ALL':
-            #group = ALL
+            # group = ALL
             show_id.append(sort)
         else:
-            #无tags
+            # 无tags
             if running_options['tags'] == 'NULL':
                 if search_group(running_options['group'],sort):
                     show_id.append(sort)
@@ -246,16 +246,23 @@ def show_list_curses() -> Tuple[str, str, str, str]:
             screen = curses.initscr()
             curses.echo()
             height, width = screen.getmaxyx()
-            curses.start_color() #设置颜色
-            curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_GREEN) #绿底黑字
-            curses.init_pair(2, curses.COLOR_RED, curses.COLOR_BLACK) #白底蓝字
-            curses.init_pair(3, curses.COLOR_MAGENTA, curses.COLOR_BLACK) #黑底什么字
+            # 设置颜色
+            curses.start_color()
+            # 绿底黑字
+            curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_GREEN)
+            # 白底蓝字
+            curses.init_pair(2, curses.COLOR_RED, curses.COLOR_BLACK)
+            # 黑底什么字
+            curses.init_pair(3, curses.COLOR_MAGENTA, curses.COLOR_BLACK)
             line_last = height - 3
             screen.clear()
             screen.border(0)
-            screen.addstr(1, 1, "SSH Manager (Version %s)" % VERSION)#,curses.color_pair(1))
-            screen.addstr(2, 1, "  Group: %s" % running_options['group'])#,curses.color_pair(1))
-            screen.addstr(3, 1, "  Tags: %s" % running_options['tags'])#,curses.color_pair(1))
+            # screen.addstr(1, 1, "SSH Manager (Version %s)" % VERSION, curses.color_pair(1))
+            screen.addstr(1, 1, "SSH Manager (Version %s)" % VERSION)
+            # screen.addstr(2, 1, "  Group: %s" % running_options['group'], curses.color_pair(1))
+            screen.addstr(2, 1, "  Group: %s" % running_options['group'])
+            # screen.addstr(3, 1, "  Tags: %s" % running_options['tags'], curses.color_pair(1))
+            screen.addstr(3, 1, "  Tags: %s" % running_options['tags'])
             screen.refresh()
             screen.hline(4, 1, curses.ACS_HLINE,width-2)
             screen.addstr(5,3, "%-2s | %-30s | %-15s | %-30s | %s " % ('ID', 'Link Target', 'Group', 'Tags', 'Host Info'))#,curses.color_pair(1))

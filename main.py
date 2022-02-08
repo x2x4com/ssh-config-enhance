@@ -2,9 +2,9 @@
 # encoding: utf-8
 # ===============================================================================
 #
-#         FILE:  sso.py
+#         FILE:  main.py
 #
-#        USAGE:  sso.py [-t tag] [-g group]
+#        USAGE:  main.py [-t tag] [-g group]
 #
 #  DESCRIPTION:  This is a script that enhances ssh config, requires a specific format of ssh config
 #
@@ -12,9 +12,9 @@
 # REQUIREMENTS:  prettytable, please install prettytable before use, pip install prettytable
 #         BUGS:  ---
 #        NOTES:  ---
-#       AUTHOR:  Jack Xu (Jack.Xu@adidas.com)
+#       AUTHOR:  x2x4 (x2x4#x2x4.net)
 #      COMPANY:  
-#      VERSION:  3.0
+#      VERSION:  3.3
 #      CREATED:
 #     REVISION:  ---
 # ===============================================================================
